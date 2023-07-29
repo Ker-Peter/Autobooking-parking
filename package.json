@@ -1,0 +1,20 @@
+{
+  "name": "handyparken-autobook-final",
+  "version": "1.0.0",
+  "description": "Automatically books the free 15 Minute parking ticket when it expires.",
+  "main": "index.js",
+  "scripts": {
+    "run": "npm index.js"
+  },
+  "author": "Peter Keresztes",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "crypto-js": "^4.1.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "node": "^20.5.0"
+  }
+}

@@ -1,0 +1,207 @@
+<h1>Dashboard</h1>
+
+<div class="flex-container">
+    <div>
+        <label>Toggle:</label>
+        <br>
+        <label class="switch">
+            <input type="checkbox" id="toggle" <%- toggleChecked ? 'checked' : '' %> onchange="toggle()">
+            <span class="slider"></span>
+        </label>    
+    </div>
+    <div>
+        <label>License Plate:</label>
+        <select id="plateSelect">
+            <% LICENSE_PLATES.forEach(plate => { %>
+                <option value="<%- plate.number %>">
+                    <%- plate.name %> - <%- plate.number %>
+                </option>  
+            <% }); %>
+        </select>
+        <button class="btn" onclick="removePlate()">Remove Plate</button>
+    </div>
+
+    <div>  
+        <input id="plateName" placeholder="Name">
+        <input id="plateNumber" placeholder="W123456">
+        <button class="btn" onclick="addPlate()">Add Plate</button>
+    </div>
+
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1, h2, h3 {
+        font-weight: bold;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    button {
+        background-color: #4285F4;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 15px;
+        font-size: 1em;
+        cursor: pointer;
+    }
+
+    button:hover {
+        box-shadow: 1px 1px 3px #ccc;
+    } 
+    input[type="text"],
+    input[type="number"] {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 60%;
+        font-size: 1em; 
+    }
+    .dashboard {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 15px;
+    }
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    @media (max-width: 600px) {
+        .dashboard {
+            padding: 8px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+        }
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+</style>
+    
+
+
+<script>
+    const LICENSE_PLATES = <%- JSON.stringify(LICENSE_PLATES) %>;  
+    const toggleChecked = <%- JSON.stringify(toggleChecked) %>;
+
+    function toggle() {
+        const select = document.getElementById('plateSelect');
+        const option = select.options[select.selectedIndex];
+        const toggle = document.getElementById('toggle'); 
+
+        if (select.length === 0) {
+            toggle.checked = false;
+            alert("Please Add License Plate Number.");
+            return;
+        } 
+
+        const data = {
+            state: document.getElementById('toggle').checked,
+            licensePlate: option.value
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/toggle');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(data));
+    }  
+
+    function addPlate() {
+        const name = document.getElementById('plateName').value;
+        const num = document.getElementById('plateNumber').value;
+        const select = document.getElementById('plateSelect');
+        const option = document.createElement('option');
+
+        const data = {
+            name: name,
+            number: num  
+        };
+
+        option.text = name + ' - ' + num;
+        option.value = num;
+
+        select.appendChild(option);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/addPlate');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(data));
+    }
+
+
+    function removePlate() {
+        const select = document.getElementById('plateSelect');
+        const option = select.options[select.selectedIndex];
+        const index = select.selectedIndex;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('DELETE', '/removeLicensePlate');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            number: option.value
+        }));
+
+        if (index > -1) {
+            select.remove(index);
+        }
+    }
+</script>
