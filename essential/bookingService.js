@@ -35,7 +35,7 @@ const bookParking = async () => {
     }
     if (!config.toggleState || retries >= maxRetries) {
       console.log('Toggle disabled / Max retries reached.');
-      config.toggleState == false;
+      config.toggleState = false;
       return;
     }
     console.log('Confirmation Successful.');

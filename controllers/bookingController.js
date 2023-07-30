@@ -14,9 +14,9 @@ exports.showDashboard = async (req, res) => {
             LICENSE_PLATES: config.LICENSE_PLATES,
             toggleChecked: toggleChecked
           });
-} else {
-    res.send('Unauthorized');
-}
+    } else {
+        res.send('Unauthorized');
+    }
 };
 
 exports.removeLicensePlate = async (req, res) => {
